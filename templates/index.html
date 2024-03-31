@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FastAPI Button Example</title>
+    <title>HTML Form Examples</title>
   </head>
   <body>
-    <h1>Click the button to read from aws s3!</h1>
+    <h1>Click the button to read from AWS S3!</h1>
+
+    <!-- Button Form -->
     <form action="/display_data" method="post">
-      <button type="submit">press me !</button>
+      <button type="submit">Press Me!</button>
+    </form>
+
+    <hr />
+    <!-- Horizontal line to separate the forms -->
+
+    <!-- Text Form -->
+    <form action="/submit_number" method="post">
+      <label for="textInput">Enter Text:</label><br />
+      <input type="text" id="textInput" name="textInput" /><br /><br />
+      <button type="submit">Submit</button>
+    </form>
+    <form action="/show_number" method="get">
+      <button type="submit">show data</button>
     </form>
   </body>
 </html>

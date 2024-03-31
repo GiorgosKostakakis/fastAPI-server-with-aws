@@ -9,6 +9,7 @@ boto3 = "*"
 uvicorn = "*"
 jinja2 = "*"
 pandas = "*"
+python-multipart = "*"
 
 [dev-packages]
 
