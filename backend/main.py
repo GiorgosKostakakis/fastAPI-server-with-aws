@@ -1,9 +1,8 @@
 import io
 import boto3
 import pandas as pd
-from fastapi import FastAPI, Request, Form, Response
+from fastapi import FastAPI, Response
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
 import uvicorn
 
 app = FastAPI()
