@@ -2,47 +2,44 @@ import io
 import boto3
 import pandas as pd
 from fastapi import FastAPI, Request, Form, Response
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 import uvicorn
 
-
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-
 
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def read_root():
+    return Response(content="Hello, World!", status_code=200)
 
-
-@app.post("/display_data", response_class=HTMLResponse)
+@app.get("/display_data", response_class=JSONResponse)
 async def display_data():
     s3_client = boto3.client("s3")
     file = "data.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
     df = pd.read_csv(response["Body"])
-    return df.to_html(index=False)
+    json_data = df.to_json(orient="records")
+    return Response(content=json_data, media_type="application/json")
 
 
-@app.get("/show_number", response_class=HTMLResponse)
+@app.get("/show_number", response_class=JSONResponse)
 async def show_number():
     s3_client = boto3.client("s3")
     file = "number.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
     df = pd.read_csv(response["Body"])
-    return df.to_html(index=False)
+    json_data = df.to_json(orient="records")
+    return Response(content=json_data, media_type="application/json")
 
-
-@app.post("/submit_number", response_class=HTMLResponse)
-async def submit_number(textInput: str = Form(...)):
+@app.get("/submit_number", response_class=HTMLResponse)
+async def submit_number(number: int):
     s3_client = boto3.client("s3")
     file = "number.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
 
     df = pd.read_csv(response["Body"])
     # Add the number to the dataframe
-    new_row = pd.DataFrame({"numbers": [textInput]})
+    new_row = pd.DataFrame({"numbers": [number]})
     df = pd.concat([df, new_row], ignore_index=True)
     csv_buffer = io.StringIO()
     df.to_csv(csv_buffer, index=False)
