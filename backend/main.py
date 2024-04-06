@@ -4,6 +4,7 @@ import pandas as pd
 from fastapi import FastAPI, Request, Form, Response
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+import uvicorn
 
 
 app = FastAPI()
@@ -16,7 +17,7 @@ async def read_root(request: Request):
 
 
 @app.post("/display_data", response_class=HTMLResponse)
-async def handle_button_click():
+async def display_data():
     s3_client = boto3.client("s3")
     file = "data.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
@@ -25,7 +26,7 @@ async def handle_button_click():
 
 
 @app.get("/show_number", response_class=HTMLResponse)
-async def handle_button_click():
+async def show_number():
     s3_client = boto3.client("s3")
     file = "number.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
@@ -34,7 +35,7 @@ async def handle_button_click():
 
 
 @app.post("/submit_number", response_class=HTMLResponse)
-async def handle_button_click(textInput: str = Form(...)):
+async def submit_number(textInput: str = Form(...)):
     s3_client = boto3.client("s3")
     file = "number.csv"
     response = s3_client.get_object(Bucket="giorgos-server", Key=file)
@@ -52,6 +53,4 @@ async def handle_button_click(textInput: str = Form(...)):
 
 
 if __name__ == "__main__":
-    import uvicorn
-
     uvicorn.run(app, host="127.0.0.1", port=8000)
